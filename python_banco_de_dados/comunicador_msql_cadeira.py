@@ -53,7 +53,6 @@ class com_socket(Thread):
                     tcp.send(self.mensagem_enviada)
                     print('enviado: ' + self.mensagem_enviada)
                     id_anterior = self.id_atual
-                    time.sleep(0.5)
                 else:
                     print "nenhum dado novo no banco"
                     time.sleep(1)
