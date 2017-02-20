@@ -40,7 +40,7 @@ class comunicacao_epw(Thread):
     def read_upd_database(self):
         global id, X, Y
         try:
-            self.con = mdb.connect('localhost','iepw','iepw', 'comandos')
+            self.con = mdb.connect('localhost','iepw','iepw', 'comandos') #conecta ao banco de dados
 
             with self.con:
                 self.cur_dic=self.con.cursor(mdb.cursors.DictCursor)
@@ -76,12 +76,12 @@ class comunicacao_epw(Thread):
 
             except socket.error:
                 tcp.close()
-            else:
-                print "Falha na conexão com o servidor \n"
+        else:
+            print "Falha na conexão com o servidor \n"
 
 
-conexao_socket = comunicacao_epw(1)
-conexao_socket.start()
-conexao_socket.read_upd_database()
-conexao_socket.envia_msg()
+conexao_socket_msql = comunicacao_epw(1) #cria um objeto da classe
+conexao_socket_msql.start() #inicia o objeto
+conexao_socket_msql.read_upd_database() #le o banco de dados e atualiza horario de leitura
+conexao_socket_msql.envia_msg() #envia msg adquirida no banco de dados ao servidor socket
 
