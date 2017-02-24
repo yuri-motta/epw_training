@@ -48,10 +48,15 @@ class com_socket(Thread):
         print "- id anterior: " + str(id_anterior)
         if self.id_atual != id_anterior:
             try:
-                self.mensagem_enviada = "X;" + X + "%" + ";Y;" + Y + "%" + str('\n')
-                tcp.send(self.mensagem_enviada)
-                print('enviado: ' + self.mensagem_enviada)
                 id_anterior = self.id_atual
+                self.mensagem_enviada = "X;" + X + "%" + ";Y;" + Y + "%" + str('\n')
+                tcp.send(self.mensagem_enviada) #envia comando a ser executado
+                print('enviado: ' + self.mensagem_enviada)
+                time.sleep(3)
+                self.mensagem_stop = "X;" + "0" + "%" + ";Y;" + "0" + "%" + str('\n')
+                tcp.send(self.mensagem_stop) #envia comando de parada
+                print('enviado: ' + self.mensagem_enviada)
+
             except socket.error:
                 print "falha no envio da mensagem ao servidor socket"
                 CONECTADO = False
