@@ -9,7 +9,7 @@ from threading import Thread
 
 
 #variaveis globais
-HOST = '192.168.100.191'  # Endereco IP do Servidor
+HOST = '192.168.1.114'  # Endereco IP do Servidor
 PORT = 4444  # Porta do Servidor
 CONECTADO = False
 id = 0
@@ -87,7 +87,7 @@ class com_msql(Thread):
     def read_upd_database(self):
         global id, X, Y
         try:
-            self.con = mdb.connect('localhost','iepw','iepw', 'comandos') #conecta ao banco de dados
+            self.con = mdb.connect('192.168.1.144','iepw','iepw', 'comandos') #conecta ao banco de dados
             with self.con:
                 self.cur_dic=self.con.cursor(mdb.cursors.DictCursor)
                 self.cur_dic.execute("SELECT * FROM comandos_eeg ORDER BY id DESC LIMIT 1")
