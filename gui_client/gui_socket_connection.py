@@ -1,6 +1,5 @@
 from Tkinter import *
 import socket
-from threading import Thread
 
 ip = "127.0.0.1"
 port = 4444
