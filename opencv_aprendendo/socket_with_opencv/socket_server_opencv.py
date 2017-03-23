@@ -5,8 +5,8 @@ import pickle
 import numpy as np
 import struct
 
-HOST = '127.0.0.1'
-PORT = 8083
+HOST = '192.168.1.144'
+PORT = 4445
 
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
