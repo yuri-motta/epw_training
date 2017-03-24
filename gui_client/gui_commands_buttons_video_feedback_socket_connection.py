@@ -1,6 +1,7 @@
 from Tkinter import *
 import socket
 import subprocess
+from threading import Thread
 
 
 ip = "127.0.0.1"
@@ -132,13 +133,29 @@ class Application(Frame):
             Label(self, text="First update IP and Port").grid(row=6, column=0, sticky=W)
 
     def start_video_feedback(self):
+        global  local_ip,video_port
         local_ip = str(self.local_ip.get())
         video_port = str(self.video_port.get())
         #os.system('ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port)
         #linux_command = 'ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port
         url = 'udp://' + local_ip + ":" + video_port
-        subprocess.call(["ffplay","-fflags","nobuffer","-flags","low_delay","-framedrop","-strict","experimental","%s" % url])
+        #subprocess.call(["ffplay","-fflags","nobuffer","-flags","low_delay","-framedrop","-strict","experimental","%s" % url])
 
+        video_stream = client_video_stream()
+        video_stream.run()
+
+class client_video_stream(Thread):
+
+    def __init__(self):
+        global local_ip, video_port
+        Thread.__init__(self)
+        #local_ip = str(local_ip.get())
+        #video_port = str(video_port.get())
+        # os.system('ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port)
+        # linux_command = 'ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port
+        self.url = 'udp://' + local_ip + ":" + video_port
+    def run(self):
+        subprocess.Popen(["ffplay", "-fflags", "nobuffer", "-flags", "low_delay", "-framedrop", "-strict", "experimental","%s" % self.url])
 
 
 root = Tk()
