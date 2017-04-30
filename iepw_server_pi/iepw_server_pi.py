@@ -6,9 +6,6 @@ import time
 import Adafruit_MCP4725
 import os
 
-"""REINICIANDO BARRAMENTO I2C"""
-os.system('sudo i2cdetect -y 1')
-
 """CONSTANTES"""
 DAC_min = 986 #equivale a 1.3V
 DAC_0 = 1744 #equivale a 2.3V
@@ -21,9 +18,16 @@ HOST = "192.168.1.119"  # Symbolic name meaning all available interfaces
 PORT = 4444  # Arbitrary non-privileged port
 
 
+"""REINICIANDO BARRAMENTO I2C"""
+os.system('sudo i2cdetect -y 1')
+
 """INSTANCIANDO OS DACs por I2C"""
 dacX_porta = Adafruit_MCP4725.MCP4725(0x62)
 dacY_porta = Adafruit_MCP4725.MCP4725(0x63)
+
+"""INICIANDO DACs NA POSICAO 0"""
+dacX_porta.set_voltage(DAC_0, True)
+dacY_porta.set_voltage(DAC_0, True)
 
 """CLASSE DO SERVIDOR UDP"""
 class Udp_server(Thread):
