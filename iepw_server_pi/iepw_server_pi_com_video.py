@@ -4,6 +4,7 @@ import re
 from threading import Thread
 import time
 import Adafruit_MCP4725
+import subprocess
 
 """CONSTANTES"""
 DAC_min = 986 #equivale a 1.3V
@@ -13,13 +14,18 @@ max_variacao_pos = DAC_max - DAC_0 #intervalo maximo de variacao positiva 2.3V a
 max_variacao_neg = DAC_0 - DAC_min #intervalo maximo de variacao negativa 2.3V a 1.3V
 
 """DADOS DE CONEXAO"""
-HOST = "127.0.0.1"  # Symbolic name meaning all available interfaces
-PORT = 4444  # Arbitrary non-privileged port
-
+HOST = "192.168.1.119"  # Symbolic name meaning all available interfaces
+IP_CLIENT = "192.168.1.144"
+PORT_COMMAND = 4444  # Arbitrary non-privileged PORT_COMMAND
+PORT_VIDEO = 4445
 
 """INSTANCIANDO OS DACs por I2C"""
 dacX_porta = Adafruit_MCP4725.MCP4725(0x62)
 dacY_porta = Adafruit_MCP4725.MCP4725(0x63)
+
+"""INICIANDO STREAMING DE VIDEO UPD PARA O CLIENT"""
+url = "udp://"+ IP_CLIENT + ":" + str(PORT_VIDEO)
+subprocess.Popen(["ffmpeg", "-r", "30", "-i", "/dev/video0", "-f", "h264", "-pix_fmt yuv422p" "-an", "-preset", "ultrafast", "-f", "mpegts", "%s" % url])
 
 """CLASSE DO SERVIDOR UDP"""
 class Udp_server(Thread):
@@ -36,7 +42,7 @@ class Udp_server(Thread):
 
         # Bind socket to local host and port
         try:
-            socket_server.bind((HOST, PORT))
+            socket_server.bind((HOST, PORT_COMMAND))
         except socket.error, msg:
             print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
             sys.exit()

@@ -88,7 +88,7 @@ class Application(Frame):
         updated = True
 
     def up_command(self):
-        command = "UP command selected"
+        command = "X=0%,Y=100%"
         if updated==True:
             conn.sendto(command, (ip_server, command_port))
             self.selected_command.delete(0.0, END)
@@ -97,7 +97,7 @@ class Application(Frame):
             Label(self, text="First update IP and Port").grid(row=6, column=0, sticky=W)
 
     def down_command(self):
-        command = "DOWN command selected"
+        command = "X=0%,Y=-100%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
             self.selected_command.delete(0.0, END)
@@ -106,7 +106,7 @@ class Application(Frame):
             Label(self, text="First update IP and Port").grid(row=6, column=0, sticky=W)
 
     def left_command(self):
-        command = "LEFT command selected"
+        command = "X=100%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
             self.selected_command.delete(0.0, END)
@@ -115,7 +115,7 @@ class Application(Frame):
             Label(self, text="First update IP and Port").grid(row=6, column=0, sticky=W)
 
     def right_command(self):
-        command = "RIGHT command selected"
+        command = "X=-100%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
             self.selected_command.delete(0.0, END)
@@ -124,7 +124,7 @@ class Application(Frame):
             Label(self, text="First update IP and Port").grid(row=6, column=0, sticky=W)
 
     def stop_command(self):
-        command = "STOP command selected"
+        command = "X=0%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
             self.selected_command.delete(0.0, END)
