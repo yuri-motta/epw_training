@@ -4,6 +4,10 @@ import re
 from threading import Thread
 import time
 import Adafruit_MCP4725
+import os
+
+"""REINICIANDO BARRAMENTO I2C"""
+os.system('sudo i2cdetect -y 1')
 
 """CONSTANTES"""
 DAC_min = 986 #equivale a 1.3V
@@ -13,7 +17,7 @@ max_variacao_pos = DAC_max - DAC_0 #intervalo maximo de variacao positiva 2.3V a
 max_variacao_neg = DAC_0 - DAC_min #intervalo maximo de variacao negativa 2.3V a 1.3V
 
 """DADOS DE CONEXAO"""
-HOST = "127.0.0.1"  # Symbolic name meaning all available interfaces
+HOST = "192.168.1.119"  # Symbolic name meaning all available interfaces
 PORT = 4444  # Arbitrary non-privileged port
 
 
@@ -121,8 +125,8 @@ class Udp_server(Thread):
             global dacX_porta
             global dacY_porta
 
-            dacX_porta.set_voltage(dacX)
-            dacY_porta.set_voltage(dacY)
+            dacX_porta.set_voltage(dacX, True)
+            dacY_porta.set_voltage(dacY, True)
 
 
 server = Udp_server()
