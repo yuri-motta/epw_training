@@ -23,11 +23,22 @@ PORT_VIDEO = 4445
 dacX_porta = Adafruit_MCP4725.MCP4725(0x62)
 dacY_porta = Adafruit_MCP4725.MCP4725(0x63)
 
-"""INICIANDO STREAMING DE VIDEO UPD PARA O CLIENT"""
-url = "udp://"+ IP_CLIENT + ":" + str(PORT_VIDEO)
-subprocess.Popen(["ffmpeg", "-r", "30", "-i", "/dev/video0", "-f", "h264", "-pix_fmt yuv422p" "-an", "-preset", "ultrafast", "-f", "mpegts", "%s" % url])
+"""CLASSE PARA SERVIDOR VIDEO STREAMING UDP"""
+class server_video_stream(Thread):
+    def __init__(self):
+        global local_ip, video_port
+        Thread.__init__(self)
+        #local_ip = str(local_ip.get())
+        #video_port = str(video_port.get())
+        # os.system('ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port)
+        # linux_command = 'ffplay -fflags nobuffer -flags low_delay -framedrop -strict experimental udp://'+ local_ip +':' + video_port
+        self.url = "udp://" + IP_CLIENT + ":" + str(PORT_VIDEO)
+    def run(self):
+        """INICIANDO STREAMING DE VIDEO UPD PARA O CLIENT"""
+        subprocess.Popen(["ffmpeg", "-r", "30", "-i", "/dev/video0", "-f", "h264", "-pix_fmt", "yuv422p", "-an", "-preset","ultrafast", "-f", "mpegts", "%s" % self.url])
 
-"""CLASSE DO SERVIDOR UDP"""
+
+"""CLASSE PARA SERVIDOR DE COMANDOS UDP"""
 class Udp_server(Thread):
     def __init__(self):
         global socket_server
@@ -133,3 +144,6 @@ class Udp_server(Thread):
 
 server = Udp_server()
 server.run()
+
+video_stream = server_video_stream()
+video_stream.run()
