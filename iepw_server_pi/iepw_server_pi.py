@@ -7,9 +7,10 @@ import Adafruit_MCP4725
 import os
 
 """CONSTANTES"""
-DAC_min = 986 #equivale a 1.3V
-DAC_0 = 1744 #equivale a 2.3V
-DAC_max = 2503 #equivale a 3.3V
+# versao utilizando a alimentacao do regulador de tensao, com 4.8V no VCC
+DAC_min = 1109 #equivale a 1.3V
+DAC_0 = 1962 #equivale a 2.3V
+DAC_max = 2815 #equivale a 3.3V
 max_variacao_pos = DAC_max - DAC_0 #intervalo maximo de variacao positiva 2.3V a 3.3V
 max_variacao_neg = DAC_0 - DAC_min #intervalo maximo de variacao negativa 2.3V a 1.3V
 
