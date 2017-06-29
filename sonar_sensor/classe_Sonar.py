@@ -9,10 +9,15 @@ from threading import Thread
 
 class Sonar(Thread):
 
-    def __init__(self, TRIG, ECHO):
+    def __init__(self, TRIG, ECHO, dist_min_obst_cm):
         Thread.__init__(self)
+
+        #variaveis para a pinagem do sensor sonar (echo e trigger)
         self.TRIG = TRIG
         self.ECHO = ECHO
+
+        #distancia minima em centimetros para considerar que foi detectado obstaculo
+        self.dist_min_obst_cm = dist_min_obst_cm
 
         """CONFIGURANDO OS PINOS"""
         GPIO.setmode(GPIO.BCM)
@@ -35,14 +40,14 @@ class Sonar(Thread):
         while GPIO.input(self.ECHO)==1:
             self.pulse_end = time.time()
             self.pulse_duration = self.pulse_end - self.pulse_start
-            self.distance = self.pulse_duration * 17150 #considerou-se a velocidade do som como 343m/s
-                                  # logo 34300 = (distance/(time/2))
-                                  # 17150 = distance/time
-                                  # distance = time * 17150
+            self.distance = self.pulse_duration * 17150 # considerou-se a velocidade do som como 343m/s
+                                                        # logo, passando para centimetros: 34300 = (distance/(time/2))
+                                                        # 17150 = distance/time
+                                                        # distance = time * 17150
 
             self.distance = round(self.distance, 2)
 
-        if self.distance < 15:
+        if self.distance < self.dist_min_obst_cm:
             self.obstaculo = True
 
         else:
@@ -52,7 +57,7 @@ class Sonar(Thread):
 #limpando as portas do GPIO antes de iniciar
 GPIO.cleanup()
 
-sensor_frente = Sonar(23,24)
+sensor_frente = Sonar(23,24,15)
 
 while True:
     sensor_frente.run()
