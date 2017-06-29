@@ -7,7 +7,7 @@ import os
 import serial
 
 """DADOS DE CONEXAO"""
-HOST = "192.168.1.144"  # Symbolic name meaning all available interfaces
+HOST = "192.168.1.127"  # Symbolic name meaning all available interfaces
 PORT = 4444  # Arbitrary non-privileged port
 
 """CONSTANTES"""
@@ -26,7 +26,7 @@ def conectado(con, cliente):
     print 'Conectado por', cliente
 
     while True:
-        data = con.recv(1024)
+        data = con.recv(256)
         if not data: break
         print cliente, data
 
@@ -89,7 +89,7 @@ def conectado(con, cliente):
         ser.write('y')
         ser.write(';')
         ser.write(chr(dacY))
-        time.sleep(0.05)
+       # time.sleep(0.05)
 
 
         #global dacX_porta
