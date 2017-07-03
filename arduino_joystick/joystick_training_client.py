@@ -6,6 +6,7 @@ import sys
 """ARGUMENTOS DE ENTRADA NA COMMAND LINE"""
 ip_server = str(sys.argv[1])
 command_port = int(sys.argv[2])
+# exemplo: python joystick_training_client.py 192.168.1.144 4444
 
 class client_joystick(Thread):
 
