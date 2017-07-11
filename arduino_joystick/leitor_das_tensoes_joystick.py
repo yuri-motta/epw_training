@@ -4,8 +4,7 @@ import socket
 import sys
 
 """ARGUMENTOS DE ENTRADA NA COMMAND LINE"""
-ip_server = str(sys.argv[1])
-command_port = int(sys.argv[2])
+
 # exemplo: python joystick_training_client.py 192.168.1.144 4444
 
 class client_joystick(Thread):
@@ -48,8 +47,8 @@ class client_joystick(Thread):
 
         # PORTA SERIAL UTILIZADA
         ser = serial.Serial('/dev/ttyUSB0', 9600)
-
-        while True:
+        f = open("valores_tensao_joystick_v3.dat", "w")
+        for i in range(1,1000,1):
             data = ser.readline(5)
             vetor_mensagem = data.split(":", 1)
             if vetor_mensagem[0] == "X":
@@ -65,52 +64,15 @@ class client_joystick(Thread):
             X = float(X)
             Y = float(Y)
 
-            """PARA X"""
-            # valor central de X
-            if X >= valor_central_min_X and X <= valor_central_max_X:
-                X_msg = 0
+            tensao_X = round(((X / 1023)*5),2) #arredonda com duas casas decimais
+            tensao_Y = round(((Y / 1023)*5),2)
 
-            # intervalo positivo de X
-            if X > valor_central_max_X:
-                X_msg = int(round(((X - valor_central_max_X) / max_variacao_posit_X) * 100))
+            print str(tensao_X) + " " + str(tensao_Y) + "\n"
 
-            # intervalo negativo de X
-            if X < valor_central_min_X:
-                X_msg = int(round(((X - valor_central_min_X) / max_variacao_neg_X) * 100))
-
-            """PARA Y """
-            # valor central de Y
-            if Y >= valor_central_min_Y and Y <= valor_central_max_Y:
-                Y_msg = 0
-
-            # intervalo positivo de Y
-            if Y > valor_central_max_Y:
-                Y_msg = int(round(((Y - valor_central_max_Y) / max_variacao_posit_Y) * 100))
-
-            # intervalo negativo de Y
-            if Y < valor_central_min_Y:
-                Y_msg = int(round(((Y - valor_central_min_Y) / max_variacao_neg_Y) * 100))
-
-            """ CONDICAO PARA X,Y FICAREM ENTRE -100 E 100"""
-            if X_msg >100:
-                X_msg =100
-
-            if X_msg <-100:
-                X_msg = -100
-
-            if Y_msg > 100:
-                Y_msg = 100
-
-            if Y_msg < -100:
-                Y_msg = -100
-
-            command = "X=" + str(X_msg) + "%" + ",Y=" + str(Y_msg) + "%"
-            print command
-            # print data
+            f.write(str(tensao_X) + " " + str(tensao_Y) + "\n")
+        f.close()
 
 
-            """ENVIO DE MENSAGEM COMANDO VIA SOCKET UDP"""
-            conn.sendto(command, (ip_server, command_port))
 
 joystick = client_joystick()
 joystick.update_ip_port()
