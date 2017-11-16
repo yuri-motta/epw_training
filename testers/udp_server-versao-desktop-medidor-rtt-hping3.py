@@ -144,7 +144,7 @@ class Udp_server(Thread):
 
                 """PING PARA O IP DO CLIENTE"""
 
-                ping_process = subprocess.Popen(['ping', '-c', '1', addr[0]], stdout=subprocess.PIPE)
+                ping_process = subprocess.Popen(['hping3', '-S', '1', addr[0]], stdout=subprocess.PIPE)
                 stdout = ping_process.stdout.read()
                 match = re.search(r'\d*\.\d*\/(\d*\.\d*)\/\d*\.\d*\/\d*\.\d*', stdout)
                 avg = match.group(1)
