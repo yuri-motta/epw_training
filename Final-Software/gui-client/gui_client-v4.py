@@ -31,18 +31,27 @@ class Application(Frame):
     def create_widgets(self):
 
         # instructions
-        self.instructions = Label(self, text="WELCOME TO IEPW")
+        self.instructions = Label(self, text="Wheelchair Training \n Environment", font="bold")
         self.instructions.grid(row=0, column=1, sticky=W)
 
+        #gui icon
+        self.gui_icon = Label(self)
+        self.wheelchair_img = ImageTk.PhotoImage(file="icons/gui_icon.png")
+        self.gui_icon.config(image=self.wheelchair_img)
+        self.gui_icon.image = self.wheelchair_img
+        self.gui_icon.pack
+        self.gui_icon.grid(row=1,column=1, sticky=W)
+
+
         # ip entry
-        Label(self, text="Command Server IP: " +"\n" + ip_command_server).grid(row=1, column=1, sticky=W)
+        #Label(self, text="Command Server IP: " + ip_command_server).grid(row=6, column=1, sticky=W)
 
         # port entry
-        Label(self, text="Command Port: " + "\n" + str(port_command_server)).grid(row=2, column=1, sticky=W)
+        #Label(self, text="Command Port: " + str(port_command_server)).grid(row=7, column=1, sticky=W)
 
         # Start training
-        self.button_save = Button(self, text="Start wheelchair training", command=self.update_ip_port)
-        self.button_save.grid(row=19,column=1, sticky=W)
+        self.button_save = Button(self, text="Start wheelchair training", command=self.update_ip_port, bg='#6C8EBF')
+        self.button_save.grid(row=5,column=1, sticky=W)
 
         #instructions
         Label(self, text="Commands").grid(row=0, column=9, sticky=W)
@@ -88,14 +97,14 @@ class Application(Frame):
         self.button_stop.grid(row=2, column=9)
 
         #Update the local ip
-        Label(self, text="Please insert your IP:").grid(row=13, column=1, sticky=W)
+        Label(self, text="Please insert your IP:").grid(row=3, column=1, sticky=W)
         self.local_ip = Entry(self)
-        self.local_ip.grid(row=14, column=1, sticky=W)
+        self.local_ip.grid(row=3, column=2, sticky=W)
 
         # Update the local port
-        Label(self, text="Video streaming port:").grid(row=16, column=1, sticky=W)
+        Label(self, text="Video streaming port:").grid(row=4, column=1, sticky=W)
         self.video_port = Entry(self)
-        self.video_port.grid(row=17, column=1, sticky=W)
+        self.video_port.grid(row=4, column=2, sticky=W)
 
         #VIDEO button
         #self.button_start_video = Button(self, text="START VIDEO FEEDBACK", command=self.start_video_feedback)
@@ -107,19 +116,20 @@ class Application(Frame):
         ip_server = ip_command_server
         command_port = port_command_server
         conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        Label(self, text="Starting!" + "\n" + "Ready to send your commands").grid(row=1, column=12, sticky=W)
-        updated = True
-
-        ## thread rtt
-        rtt_measure_send =  RTT_sender()
-        t1 = threading.Thread(target=rtt_measure_send.run)
-        t1.setDaemon(True)
-        t1.start()
 
         if self.local_ip.get() == "":
-            Label(self, text="First update your local IP and Port for video streaming").grid(row=6, column=0, sticky=W)
+            Label(self, text="First update your local IP \n and Port for video streaming", fg='red').grid(row=6, column=1, sticky=W)
 
         else:
+            Label(self, text="Starting!" + "\n" + "Ready to send your commands").grid(row=6, column=1, sticky=W)
+            updated = True
+
+            ## thread rtt
+            rtt_measure_send = RTT_sender()
+            t1 = threading.Thread(target=rtt_measure_send.run)
+            t1.setDaemon(True)
+            t1.start()
+
             ## start video streaming
             local_ip = str(self.local_ip.get())
             video_port = str(self.video_port.get())
@@ -219,7 +229,7 @@ class RTT_sender(Thread):
 
 root = Tk()
 root.title("CLIENT GUI")
-root.geometry("800x400")
+root.geometry("600x400")
 app = Application(root)
 
 root.mainloop()
