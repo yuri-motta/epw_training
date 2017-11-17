@@ -203,28 +203,32 @@ class RTT_sender(Thread):
     def run(self):
         global ip_command_server, port_command_server
 
-
         while True:
-            ping_process = subprocess.Popen(['ping', '-c', '1', ip_server], stdout=subprocess.PIPE)
-            stdout = ping_process.stdout.read()
-            match = re.search(r'\d*\.\d*\/(\d*\.\d*)\/\d*\.\d*\/\d*\.\d*', stdout)
-            avg = match.group(1)
 
-            rtt = '{}'.format(avg)
+            try:
+                ping_process = subprocess.Popen(['ping', '-c', '1', ip_server], stdout=subprocess.PIPE)
+                stdout = ping_process.stdout.read()
+                match = re.search(r'\d*\.\d*\/(\d*\.\d*)\/\d*\.\d*\/\d*\.\d*', stdout)
+                avg = match.group(1)
 
-            ts = time.time()
-            ano = datetime.datetime.fromtimestamp(ts).strftime('%Y')
-            mes = datetime.datetime.fromtimestamp(ts).strftime('%m')
-            dia = datetime.datetime.fromtimestamp(ts).strftime('%d')
-            hora = datetime.datetime.fromtimestamp(ts).strftime('%H')
-            minutos = datetime.datetime.fromtimestamp(ts).strftime('%M')
-            segundos = datetime.datetime.fromtimestamp(ts).strftime('%S')
+                rtt = '{}'.format(avg)
 
-            print(rtt)
+                ts = time.time()
+                ano = datetime.datetime.fromtimestamp(ts).strftime('%Y')
+                mes = datetime.datetime.fromtimestamp(ts).strftime('%m')
+                dia = datetime.datetime.fromtimestamp(ts).strftime('%d')
+                hora = datetime.datetime.fromtimestamp(ts).strftime('%H')
+                minutos = datetime.datetime.fromtimestamp(ts).strftime('%M')
+                segundos = datetime.datetime.fromtimestamp(ts).strftime('%S')
 
-            self.message = "RTT: " + rtt + " " + " TS: " + str(ts) + " " + str(ano) + " " + str(mes) + " " + str(dia) + " " + str(hora)+ " "  + str(minutos)+ " "  + str(segundos)
-            conn.sendto(self.message, (ip_command_server, port_command_server))
-            time.sleep(1)
+                print(rtt)
+
+                self.message = "RTT: " + rtt + " " + " TS: " + str(ts) + " " + str(ano) + " " + str(mes) + " " + str(dia) + " " + str(hora)+ " "  + str(minutos)+ " "  + str(segundos)
+                conn.sendto(self.message, (ip_command_server, port_command_server))
+                time.sleep(1)
+
+            except AttributeError:
+                print "failed to ping"
 
 
 root = Tk()
