@@ -157,15 +157,19 @@ class Udp_server(Thread):
 
                 if 'stop' in data:
                     """FINALIZANDO O TREINO"""
-                    print "Training with " +addr[0] + " has finished"
+                    print "-------------------------"
+                    print "The training has finished"
+                    print "-------------------------"
+
                     f.close()
                     c.close()
 
                 else:
                     print "Message different from pattern: " + data
 
-        except KeyboardInterrupt:
+        except KeyboardInterrupt or ValueError:
             f.close()
+            c.close()
             pass
 
 
