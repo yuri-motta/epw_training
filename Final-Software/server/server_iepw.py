@@ -69,7 +69,7 @@ class Udp_server(Thread):
 
         #inicio do streaming por http
         self.url_http = "http://" + HOST + ":"+ str(http_port)
-        subprocess.Popen(["ffmpeg", "-i", "/dev/video0", "-s", "800x600", "-r", "15", "-f", "mpegts", "-listen","1","%s" % self.url_http])
+        subprocess.Popen(["ffmpeg", "-i", "/dev/video0", "-s", "800x600", "-r", "15", "-f", "mpegts", "-fflags","nobuffer", "-listen","1","%s" % self.url_http])
 
         try:
             while 1:
@@ -154,6 +154,11 @@ class Udp_server(Thread):
                 if 'RTT' in data:
                     """SALVANDO O HISTORICO RTT EM ARQUIVO"""
                     f.write("IP: " + addr[0] + " " + data + "\n")
+
+                if 'stop' in data:
+                    """FINALIZANDO O TREINO"""
+                    f.close()
+                    c.close()
 
                 else:
                     print "Message different from pattern: " + data

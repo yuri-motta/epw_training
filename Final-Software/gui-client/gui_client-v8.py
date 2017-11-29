@@ -55,6 +55,10 @@ class Application(Frame):
         self.button_save = Button(self, text="Start wheelchair training", command=self.update_ip_port, bg='#6C8EBF')
         self.button_save.grid(row=5,column=1, sticky=W)
 
+        # Stop training
+        self.button_stop = Button(self, text="Stop training", command=self.stop_training, bg='#DF0101')
+        self.button_stop.grid(row=6, column=1, sticky=W)
+
         #instructions
         Label(self, text="Commands").grid(row=0, column=9, sticky=W)
 
@@ -106,8 +110,7 @@ class Application(Frame):
         command_port = port_command_server
         conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-
-        Label(self, text="Starting!" + "\n" + "Ready to send your commands").grid(row=6, column=1, sticky=W)
+        Label(self, text="Training started!").grid(row=7, column=1, sticky=W)
         updated = True
 
         ## thread rtt
@@ -118,6 +121,13 @@ class Application(Frame):
 
         video_stream = client_video_stream()
         video_stream.run()
+
+    def stop_training(self):
+
+        command = "stop"
+        conn.sendto(command, (ip_server, command_port))
+        print "Stop training"
+        Label(self, text="       Training finished        " + "\n" +"      Thank you!       ").grid(row=7, column=1, sticky=W)
 
     def up_command(self):
         command = "X=0%,Y=100%"
@@ -215,7 +225,7 @@ class RTT_sender(Thread):
 
 root = Tk()
 root.title("CLIENT GUI")
-root.geometry("600x400")
+root.geometry("400x360")
 app = Application(root)
 
 root.mainloop()
