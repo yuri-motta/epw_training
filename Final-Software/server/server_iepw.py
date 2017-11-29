@@ -157,6 +157,7 @@ class Udp_server(Thread):
 
                 if 'stop' in data:
                     """FINALIZANDO O TREINO"""
+                    print "Training with " +addr[0] + " has finished"
                     f.close()
                     c.close()
 
