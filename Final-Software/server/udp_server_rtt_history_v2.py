@@ -149,12 +149,11 @@ class Udp_server(Thread):
 
                     # ------- FORMA ORIGINAL AUTOMATICA
                     #self.url = 'tcp://' + addr[0] + ":" + str(video_port)
-                    # ------- FORMA ORIGINAL AUTOMATICA
 
-                    # -------FORMA ALTERNATIVA
-                    self.ip_client_metodo_alternativo = "200.129.152.97"
+
+                    # -------FORMA ALTERNATIVA FORCANDO O IP
+                    self.ip_client_metodo_alternativo = "192.168.1.117"
                     self.url = 'tcp://' + self.ip_client_metodo_alternativo + ":" + str(video_port)
-                    # -------FORMA ALTERNATIVA
 
 
                     subprocess.Popen(["ffmpeg", "-i", "/dev/video0", "-s", "800x600","-r","15","-f","mpegts","-vcodec","mpeg4","%s" % self.url])
