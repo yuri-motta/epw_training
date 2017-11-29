@@ -8,7 +8,6 @@ import os
 import serial
 import datetime
 
-
 """ NOVA VERSAO DO SERVIDOR"""
 """ VERSAO COM VIDEO STREAMING AUTOMATICO"""
 
@@ -19,23 +18,26 @@ nome_usuario = str(sys.argv[1])
 
 """CONSTANTES"""
 # versao utilizando a alimentacao do regulador de tensao, com 4.8V no VCC
-DAC_min = 88 #equivale a 1.3V
-DAC_0 = 155 #equivale a 2.3V
-DAC_max = 223 #equivale a 3.3V
-max_variacao_pos = DAC_max - DAC_0 #intervalo maximo de variacao positiva 2.3V a 3.3V
+DAC_min = 88  # equivale a 1.3V
+DAC_0 = 155  # equivale a 2.3V
+DAC_max = 223  # equivale a 3.3V
+max_variacao_pos = DAC_max - DAC_0  # intervalo maximo de variacao positiva 2.3V a 3.3V
 
-max_variacao_neg = DAC_0 - DAC_min #intervalo maximo de variacao negativa 2.3V a 1.3V
+max_variacao_neg = DAC_0 - DAC_min  # intervalo maximo de variacao negativa 2.3V a 1.3V
 
 """DADOS DE CONEXAO"""
-HOST = "192.168.1.117" #ip servidor comandos
-PORT = 4444  #porta do servidor de comandos
-video_port = 4444 #porta do video
+HOST = "192.168.1.117"  # ip servidor comandos
+PORT = 4444  # porta do servidor de comandos
+video_port = 4444  # porta do video
+http_port = 4444
 
 """COMUNICACAO SERIAL"""
-#ser = serial.Serial('/dev/ttyS0',115200)
+# ser = serial.Serial('/dev/ttyS0',115200)
 
 
 """CLASSE DO SERVIDOR UDP"""
+
+
 class Udp_server(Thread):
     def __init__(self):
         global socket_server
@@ -60,10 +62,14 @@ class Udp_server(Thread):
     def run(self):
         """receive and send messages"""
 
-        global socket_server, video_port
+        global socket_server, video_port, http_port
         f = open(nome_usuario + "_rtt" + ".dat", "w")
         c = open(nome_usuario + "_commands" + ".dat", "w")
         # now keep talking with the client
+
+        #inicio do streaming por http
+        self.url_http = "http://" + HOST + ":"+ str(http_port)
+        subprocess.Popen(["ffmpeg", "-i", "/dev/video0", "-s", "800x600", "-r", "15", "-f", "mpegts", "-listen","1","%s" % self.url_http])
 
         try:
             while 1:
@@ -75,12 +81,12 @@ class Udp_server(Thread):
                 if not data:
                     break
 
-                #reply = 'OK...' + data
-                #socket_server.sendto(reply, addr)
+                # reply = 'OK...' + data
+                # socket_server.sendto(reply, addr)
 
 
                 print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
-                #EXEMPLO DE MSG RECEBIDA: 'X=-30%,Y=-50%'
+                # EXEMPLO DE MSG RECEBIDA: 'X=-30%,Y=-50%'
 
                 if '%' in data:
 
@@ -136,26 +142,30 @@ class Udp_server(Thread):
                     print dacY
 
                     """ENVIANDO A MENSAGEM SERIAL"""
-                    #ser.write('x')
-                    #ser.write(';')
-                    #ser.write(chr(dacX))
-                    #ser.write('y')
-                    #ser.write(';')
-                    #ser.write(chr(dacY))
+                    # ser.write('x')
+                    # ser.write(';')
+                    # ser.write(chr(dacX))
+                    # ser.write('y')
+                    # ser.write(';')
+                    # ser.write(chr(dacY))
                     """SALVANDO O HISTORICO DE COMANDOS EM ARQUIVO"""
-                    c.write("IP: " + addr[0] + " Command: " + str(int(X)) + " " + str(int   (Y)) + "\n")
+                    c.write("IP: " + addr[0] + " Command: " + str(int(X)) + " " + str(int(Y)) + "\n")
 
                 if 'startvs' in data:
-
                     # ------- FORMA ORIGINAL AUTOMATICA
                     self.url = 'tcp://' + addr[0] + ":" + str(video_port)
-            
 
                     # -------FORMA ALTERNATIVA FORCANDO O IP
-                    #self.ip_client_metodo_alternativo = "192.168.1.117"
-                    #self.url = 'tcp://' + self.ip_client_metodo_alternativo + ":" + str(video_port)
+                    # self.ip_client_metodo_alternativo = "192.168.1.117"
+                    # self.url = 'tcp://' + self.ip_client_metodo_alternativo + ":" + str(video_port)
 
-                    subprocess.Popen(["ffmpeg", "-i", "/dev/video0", "-s", "800x600","-r","15","-f","mpegts","-vcodec","mpeg4","%s" % self.url])
+
+                    # -------FORMA ANTIGA DE STREAMING DE VIDEO
+                    #subprocess.Popen(
+                    #   ["ffmpeg", "-i", "/dev/video0", "-s", "800x600", "-r", "15", "-f", "mpegts", "-vcodec", "mpeg4",
+                    #   "%s" % self.url])
+
+
 
                     # ffmpeg -i /dev/video0 -s 800x600 -r 30 -f mpegts -vcodec mpeg4 tcp://200.129.152.97:4444
 
@@ -169,6 +179,7 @@ class Udp_server(Thread):
         except KeyboardInterrupt:
             f.close()
             pass
+
 
 server = Udp_server()
 server.run()
