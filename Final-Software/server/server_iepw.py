@@ -153,7 +153,12 @@ class Udp_server(Thread):
 
                 if 'RTT' in data:
                     """SALVANDO O HISTORICO RTT EM ARQUIVO"""
-                    f.write("IP: " + addr[0] + " " + data + "\n")
+                    try:
+                        f.write("IP: " + addr[0] + " " + data + "\n")
+
+                    except ValueError:
+                        pass
+
 
                 if 'stop' in data:
                     """FINALIZANDO O TREINO"""
