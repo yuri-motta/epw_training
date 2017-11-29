@@ -151,24 +151,6 @@ class Udp_server(Thread):
                     """SALVANDO O HISTORICO DE COMANDOS EM ARQUIVO"""
                     c.write("IP: " + addr[0] + " Command: " + str(int(X)) + " " + str(int(Y)) + "\n")
 
-                if 'startvs' in data:
-                    # ------- FORMA ORIGINAL AUTOMATICA
-                    self.url = 'tcp://' + addr[0] + ":" + str(video_port)
-
-                    # -------FORMA ALTERNATIVA FORCANDO O IP
-                    # self.ip_client_metodo_alternativo = "192.168.1.117"
-                    # self.url = 'tcp://' + self.ip_client_metodo_alternativo + ":" + str(video_port)
-
-
-                    # -------FORMA ANTIGA DE STREAMING DE VIDEO
-                    #subprocess.Popen(
-                    #   ["ffmpeg", "-i", "/dev/video0", "-s", "800x600", "-r", "15", "-f", "mpegts", "-vcodec", "mpeg4",
-                    #   "%s" % self.url])
-
-
-
-                    # ffmpeg -i /dev/video0 -s 800x600 -r 30 -f mpegts -vcodec mpeg4 tcp://200.129.152.97:4444
-
                 if 'RTT' in data:
                     """SALVANDO O HISTORICO RTT EM ARQUIVO"""
                     f.write("IP: " + addr[0] + " " + data + "\n")
