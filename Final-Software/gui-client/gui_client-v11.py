@@ -164,6 +164,11 @@ class Application(Frame):
         command = "X=100%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+
 
         else:
             Label(self, text="First press Start", fg='red').grid(row=6, column=1, sticky=W)
@@ -172,6 +177,11 @@ class Application(Frame):
         command = "X=-100%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+
 
         else:
             Label(self, text="First press Start", fg='red').grid(row=6, column=1, sticky=W)
@@ -180,6 +190,11 @@ class Application(Frame):
         command = "X=0%,Y=0%"
         if updated == True:
             conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+            conn.sendto(command, (ip_server, command_port))
+
 
         else:
             Label(self, text="First press Start", fg='red').grid(row=6, column=1, sticky=W)
