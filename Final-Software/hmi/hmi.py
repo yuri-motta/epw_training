@@ -138,7 +138,7 @@ class Application(Frame):
 
 
     def up_command(self):
-        command = "X=-10%,Y=90%"
+        command = "X=-10%,Y=80%"
         if updated==True:
             conn.sendto(command, (ip_server, command_port))
             conn.sendto(command, (ip_server, command_port))
